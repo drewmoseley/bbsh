@@ -707,7 +707,7 @@ for arg in ${TMP_ENV_ARG_NAMES[@]}
 do
     if [ ! -z "${!arg}" ]; then
         debug "Propogating environment variable: '${arg}'='${!arg}'"
-        TMP_ENV_ARGS=( ${TMP_ENV_ARGS[@]} "${arg}=\"${!arg}\"" )
+        TMP_ENV_ARGS=( ${TMP_ENV_ARGS[@]} "${arg}=${!arg}" )
     fi
 done
 
