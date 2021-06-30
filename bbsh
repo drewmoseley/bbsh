@@ -522,10 +522,15 @@ invoke_setup_script()
 
     debug "Sourcing '${__setup_script} ${__setup_args[@]}'"
 
-    if [ -z "$DEBUG" ]; then
-        source "${__setup_script}" ${__setup_args[@]} > /dev/null
+    if [ -z "${CMD_ARGS}" ]; then
+        if [ -z "$DEBUG" ]; then
+            source "${__setup_script}" ${__setup_args[@]} > /dev/null
+        else
+            source "${__setup_script}" ${__setup_args[@]}
+        fi
     else
-        source "${__setup_script}" ${__setup_args[@]}
+        # When running with CMD_ARGS, completely hide the output of the setup script
+        source "${__setup_script}" ${__setup_args[@]} > /dev/null 2>&1
     fi
 
     if [ ${?} -ne 0 ]; then
