@@ -741,6 +741,7 @@ ENV_ARGS=( \
     "PS1=${PS1}" \
     "TERM=${TERM}" \
     "LANG=${LANG}" \
+    "DISPLAY=${DISPLAY}" \
     ${ENV_ARGS[@]} \
     )
 
