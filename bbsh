@@ -756,12 +756,14 @@ if [ -n "${CMD_ARGS}" ]; then
     "${ENV_ARGS[@]}" \
     bash --noprofile --norc \
     -c "${CMD_ARGS}"
+    RC=$?
 else
     /usr/bin/env -i \
     "${ENV_ARGS[@]}" \
     bash --noprofile --norc
+    RC=$?
 fi
 
 debug "Exiting ${SCRIPT_NAME}"
-
+exit $RC
 # vi: set expandtab tabstop=2 shiftwidth=2 incsearch ignorecase
