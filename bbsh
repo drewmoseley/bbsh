@@ -734,7 +734,7 @@ fi
 ENV_ARGS=( \
     ${TMP_ENV_ARGS[@]} \
     "${EXTRAWHITE_VARNAME}=${EXTRAWHITE_VARVALUE}" \
-    "BUILDDIR=${BUILDDIR:?}" \
+    "BUILD_DIR=${BUILD_DIR:?}" \
     "HOME=${HOME}" \
     "BSHLVL=$BSHLVL" \
     "PATH=${PATH}" \
