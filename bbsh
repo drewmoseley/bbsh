@@ -358,10 +358,10 @@ validate_cmd_line_options()
     if  [ -n "${CMD_LINE_BUILD_DIR}" ]; then
         if  [ -n "${CMD_LINE_INIT}" ]; then
             # CMD_LINE_BUILD_DIR is set and this is an initial invocation
-            # Ensure expanded CMD_LINE_BUILD_DIR *DOESN'T* exist already.
+            # Ensure expanded CMD_LINE_BUILD_DIR *DOESN'T* have a bblayers.conf file.
             expand_dir_var CMD_LINE_BUILD_DIR "the build directory" "false"
-            if [ -d "${CMD_LINE_BUILD_DIR}" ]; then
-                usage "build directory '${CMD_LINE_BUILD_DIR}' already exists!"
+            if [ -f "${CMD_LINE_BUILD_DIR}/conf/bblayers.conf" ]; then
+                usage "build directory '${CMD_LINE_BUILD_DIR}' already configured (ie bblayers.conf exists)!"
             fi
         else
             # CMD_LINE_BUILD_DIR is set for an normal invocation
@@ -383,9 +383,9 @@ validate_final_config()
 {
     debug "Validating final configuration"
 
-    # For an initial invocation, ensure BUILD_DIR *DOESN'T* exist.
-    if  [ -n "${CMD_LINE_INIT}" ] && [ -d "${BUILD_DIR}" ]; then
-        usage "build directory '${_BUILD_DIR}' already exists!"
+    # For an initial invocation, ensure BUILD_DIR *DOESN'T* contain bblayers.conf.
+    if  [ -n "${CMD_LINE_INIT}" ] && [ -f "${BUILD_DIR}/conf/bblayers.conf" ]; then
+        usage "build directory '${_BUILD_DIR}' already configured (ie bblayers.conf exists)!"
     # For subsequent invocations, ensure BUILD_DIR *DOES* exist.
     elif [ -z "${CMD_LINE_INIT}" ] && [ ! -d "${BUILD_DIR}" ]; then
         usage "build directory '${_BUILD_DIR}' doesn't exist!"
