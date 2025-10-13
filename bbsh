@@ -706,7 +706,7 @@ if [ -n "$DEBUG" ]; then
 fi
 
 TMP_ENV_ARGS=()
-TMP_ENV_ARG_NAMES=( "$(echo "${BB_ENV_EXTRAWHITE}" "${BB_ENV_PASSTHROUGH_ADDITIONS}" | tr ' ' '\n' | sort | uniq | tr '\n' ' ')" )
+TMP_ENV_ARG_NAMES=( "$(echo ${BB_ENV_PASSTHROUGH_ADDITIONS} | tr ' ' '\n' | sort | uniq | tr '\n' ' ')" )
 
 for arg in ${TMP_ENV_ARG_NAMES[@]}
 do
@@ -719,21 +719,10 @@ done
 debug "TMP_ENV_ARGS = '${TMP_ENV_ARGS[@]}'"
 debug "ENV_ARGS = '${ENV_ARGS[@]}'"
 
-# Special handling for BB_ENV_EXTRAWHITE and BB_ENV_PASSTHROUGH_ADDITIONS
-# The former has been renamed to the later in kirkstone and we need to
-# make sure that only one is set
-if [ -n "${BB_ENV_EXTRAWHITE}" ]; then
-    EXTRAWHITE_VARNAME="BB_ENV_EXTRAWHITE"
-    EXTRAWHITE_VARVALUE="${BB_ENV_EXTRAWHITE:?}"
-else
-    EXTRAWHITE_VARNAME="BB_ENV_PASSTHROUGH_ADDITIONS"
-    EXTRAWHITE_VARVALUE="${BB_ENV_PASSTHROUGH_ADDITIONS:?}"
-fi
-
 # Set default environment variables to propogate
 ENV_ARGS=( \
     ${TMP_ENV_ARGS[@]} \
-    "${EXTRAWHITE_VARNAME}=${EXTRAWHITE_VARVALUE}" \
+    "BB_ENV_PASSTHROUGH_ADDITIONS=${BB_ENV_PASSTHROUGH_ADDITIONS:?}" \
     "BUILD_DIR=${BUILD_DIR:?}" \
     "HOME=${HOME}" \
     "BSHLVL=$BSHLVL" \
