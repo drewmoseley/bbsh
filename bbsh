@@ -706,22 +706,21 @@ if [ -n "$DEBUG" ]; then
 fi
 
 TMP_ENV_ARGS=()
-TMP_ENV_ARG_NAMES=( "$(echo ${BB_ENV_PASSTHROUGH_ADDITIONS} | tr ' ' '\n' | sort | uniq | tr '\n' ' ')" )
+read -ra TMP_ENV_ARG_NAMES <<< "$(echo ${BB_ENV_PASSTHROUGH_ADDITIONS} | tr ' ' '\n' | sort -u | tr '\n' ' ' | grep -v '^$')"
 
-for arg in ${TMP_ENV_ARG_NAMES[@]}
-do
-    if [ ! -z "${!arg}" ]; then
-        debug "Propogating environment variable: '${arg}'='${!arg}'"
-        TMP_ENV_ARGS=( ${TMP_ENV_ARGS[@]} "${arg}=${!arg}" )
+TMP_ENV_ARGS=()
+for arg in "${TMP_ENV_ARG_NAMES[@]}"; do
+    if [[ -n "${!arg}" ]]; then
+        debug "Propagating environment variable: '${arg}'='${!arg}'"
+        TMP_ENV_ARGS+=( "${arg}=${!arg}" )
     fi
 done
 
-debug "TMP_ENV_ARGS = '${TMP_ENV_ARGS[@]}'"
-debug "ENV_ARGS = '${ENV_ARGS[@]}'"
+test -n "${DEBUG}" && printf "TMP_ENV_ARGS:\n" && printf '\t%s\n' "${TMP_ENV_ARGS[@]}"
 
 # Set default environment variables to propogate
 ENV_ARGS=( \
-    ${TMP_ENV_ARGS[@]} \
+    "${TMP_ENV_ARGS[@]}" \
     "BB_ENV_PASSTHROUGH_ADDITIONS=${BB_ENV_PASSTHROUGH_ADDITIONS:?}" \
     "BUILD_DIR=${BUILD_DIR:?}" \
     "HOME=${HOME}" \
@@ -731,8 +730,9 @@ ENV_ARGS=( \
     "TERM=${TERM}" \
     "LANG=${LANG}" \
     "DISPLAY=${DISPLAY}" \
-    ${ENV_ARGS[@]} \
     )
+
+test -n "${DEBUG}" && printf "ENV_ARGS:\n" && printf '\t%s\n' "${ENV_ARGS[@]}"
 
 # Change to the build directory and start there.
 cd "${BUILD_DIR:?}"
